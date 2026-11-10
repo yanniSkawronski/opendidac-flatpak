@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=OpenDidac Desktop
+Comment=OpenDidac desktop application
+Exec=opendidac-desktop %u
+Terminal=false
+Type=Application
+Icon=ch.heigvd.opendidac.Desktop
+StartupWMClass=OpenDidacDesktop
+MimeType=x-scheme-handler/opendidac;
+Categories=Utility;

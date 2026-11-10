@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>ch.heigvd.opendidac.Desktop</id>
+  <name>OpenDidac Desktop</name>
+  <summary>OpenDidac desktop application</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>OpenDidac Desktop, packaged from the official opendidac-desktop Debian package (Electron-based).</p>
+  </description>
+  <launchable type="desktop-id">ch.heigvd.opendidac.Desktop.desktop</launchable>
+  <url type="homepage">https://opendidac.heig-vd.in</url>
+  <provides>
+    <binary>opendidac-desktop</binary>
+    <mediatype>x-scheme-handler/opendidac</mediatype>
+  </provides>
+  <releases>
+    <release version="1.0.0" date="2026-11-06"/>
+  </releases>
+</component>

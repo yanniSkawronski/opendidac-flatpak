@@ -1,0 +1,44 @@
+app-id: ch.heigvd.opendidac.Desktop
+runtime: org.freedesktop.Platform
+runtime-version: "25.08"
+sdk: org.freedesktop.Sdk
+command: opendidac-desktop
+branch: stable
+
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --share=network
+  - --device=dri
+  - --filesystem=xdg-download
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.freedesktop.portal.*
+
+modules:
+  - name: opendidac-desktop
+    buildsystem: simple
+    sources:
+      - type: file
+        path: opendidac-desktop_1.0.0_amd64.deb
+      - type: file
+        path: opendidac-desktop.sh
+      - type: file
+        path: ch.heigvd.opendidac.Desktop.desktop
+      - type: file
+        path: ch.heigvd.opendidac.Desktop.metainfo.xml
+    build-commands:
+      # Unpack the .deb payload (a .deb is an ar archive; data.tar.zst is the payload)
+      - mkdir payload
+      - ar p opendidac-desktop_1.0.0_amd64.deb data.tar.zst | zstd -dc | tar -xf - -C payload
+      # Map the deb's /usr tree onto the Flatpak /app prefix
+      - install -d /app/lib /app/bin /app/share/applications /app/share/metainfo /app/share/icons/hicolor/512x512/apps
+      - cp -a payload/usr/lib/opendidac-desktop /app/lib/
+      - install -m755 opendidac-desktop.sh /app/bin/opendidac-desktop
+      - install -m644 ch.heigvd.opendidac.Desktop.desktop /app/share/applications/
+      # flatpak-validate-icon and appstreamcli both reject icons larger than 512px, so ship a downscaled 512x512 render
+      - ffmpeg -y -loglevel error -i payload/usr/share/pixmaps/opendidac-desktop.png -vf scale=512:512 -frames:v 1 /app/share/icons/hicolor/512x512/apps/ch.heigvd.opendidac.Desktop.png
+      - install -m644 ch.heigvd.opendidac.Desktop.metainfo.xml /app/share/metainfo/
+      - rm -rf payload
